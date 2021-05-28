@@ -17,8 +17,8 @@
 #ifndef OC_OSCORE_CRYPTO_H
 #define OC_OSCORE_CRYPTO_H
 
-#include <inttypes.h>
 #include <stddef.h>
+#include <inttypes.h>
 
 #ifdef __cplusplus
 extern "C" {
