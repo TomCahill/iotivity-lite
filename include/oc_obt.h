@@ -617,6 +617,7 @@ int oc_obt_device_hard_reset(oc_uuid_t *uuid, oc_obt_device_status_cb_t cb,
 int oc_obt_provision_pairwise_credentials(oc_uuid_t *uuid1, oc_uuid_t *uuid2,
                                           oc_obt_status_cb_t cb, void *data);
 
+#ifdef OC_OSCORE
 int oc_obt_provision_pairwise_oscore_contexts(oc_uuid_t *uuid1,
                                               oc_uuid_t *uuid2,
                                               oc_obt_status_cb_t cb,
@@ -632,6 +633,8 @@ int oc_obt_provision_server_group_oscore_context(oc_uuid_t *uuid,
                                                  const char *desc,
                                                  oc_obt_device_status_cb_t cb,
                                                  void *data);
+#endif /* OC_OSCORE */
+
 /**
  * Provision identity certificates
  *

@@ -1123,7 +1123,10 @@ void oc_resource_set_properties_cbs(oc_resource_t *resource,
                                     oc_set_properties_cb_t set_properties,
                                     void *set_props_user_data);
 
+#ifdef OC_OSCORE
 void oc_resource_set_secure_mcast(oc_resource_t *resource, bool supported);
+#endif /* OC_OSCORE */
+
 /**
  * Add a resource to the IoTivity stack.
  *
@@ -1835,9 +1838,11 @@ bool oc_do_site_local_ipv6_multicast(const char *uri, const char *query,
 
 void oc_stop_multicast(oc_client_response_t *response);
 
+#ifdef OC_OSCORE
 bool oc_init_multicast_update(const char *uri, const char *query);
 
 bool oc_do_multicast_update(void);
+#endif /* OC_OSCORE */
 
 /**
  * Free a list of endpoints from the oc_endpoint_t
