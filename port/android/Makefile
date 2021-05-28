@@ -110,7 +110,7 @@ IPV4 ?= 1
 export TCP ?= 1
 
 export CLOUD ?= 1
-
+export OSCORE ?= 1
 
 # unlike other IoTivity-lite builds Android assumes we want to build Java by
 # default. It also assumes the use of OC_IDD_API is used by default.
@@ -137,7 +137,6 @@ DTLS= \
 	ssl_srv.c	ssl_ticket.c			ssl_tls.c	rsa_internal.c				\
 	x509write_csr.c			x509write_crt.c			x509_create.c				\
 	x509_csr.c	platform_util.c
-
 DTLSFLAGS=-I../../deps/mbedtls/include -D__OC_RANDOM
 
 CBOR=../../deps/tinycbor/src/cborencoder.c ../../deps/tinycbor/src/cborencoder_close_container_checked.c ../../deps/tinycbor/src/cborparser.c# ../../deps/tinycbor/src/cbortojson.c ../../deps/tinycbor/src/cborpretty.c ../../deps/tinycbor/src/cborparser_dup_string.c
@@ -166,6 +165,12 @@ HEADERS_UTIL_PT = $(wildcard ../../util/pt/*.h)
 HEADERS_PORT = $(wildcard ../../port/*.h)
 HEADERS_TINYCBOR = $(wildcard ../../deps/tinycbor/src/*.h)
 
+# Filter out oscore files from coap
+ifeq ($(OSCORE), 0)
+	SRC := $(filter-out ../../messaging/coap/oscore.c, $(SRC))
+	HEADERS_COAP := $(filter-out ../../messaging/coap/oscore.h ../../messaging/coap/oscore_constants.h, $(HEADERS_COAP))
+endif
+
 CFLAGS_CLOUD=-I../../api/cloud
 CFLAGS?=-fPIC -fno-asynchronous-unwind-tables -fno-omit-frame-pointer -ffreestanding -Os -fno-stack-protector -ffunction-sections -fdata-sections -fno-strict-overflow -I./ -I../../include/ -I../../ -std=gnu99 -Wall -DLONG_BIT=64 -D__ANDROID_API__=${ANDROID_API}
 OBJ_COMMON=$(addprefix ${OBJDIR}/,$(notdir $(SRC_COMMON:.c=.o)))
@@ -192,29 +197,23 @@ ifeq ($(CLOUD),1)
 	TCP=1
 	IPV4=1
 	SAMPLES += cloud_server cloud_tests
+	#NATIVE_SAMPLES += cloud_linux cloud_tests
 endif
 
 OBT = onboarding_tool
 
-ifeq ($(CLOUD),1)
-	CFLAGS += -DOC_CLOUD
-	TCP=1
-	IPV4=1
-	#NATIVE_SAMPLES += cloud_linux cloud_tests
-endif
-
 ifeq ($(DEBUG),1)
 	CFLAGS += -g -O0
 	EXTRA_CFLAGS += -DOC_DEBUG
-ifeq ($(DEBUG_TLS),1)
-	EXTRA_CFLAGS += -DOC_DEBUG_TLS
-endif
+	ifeq ($(DEBUG_TLS),1)
+		EXTRA_CFLAGS += -DOC_DEBUG_TLS
+	endif
 else
 
-# don't use these options on github
-ifeq (${MYGITHUB_ACTIONS}, false)
-	CFLAGS += -Wl,--gc-sections
-endif
+	# don't use these options on github
+	ifeq (${MYGITHUB_ACTIONS}, false)
+		CFLAGS += -Wl,--gc-sections
+	endif
 	
 endif
 
@@ -236,9 +235,12 @@ ifeq ($(SWUPDATE),1)
 endif
 
 ifneq ($(SECURE),0)
-	SRC += $(addprefix ../../security/,oc_acl.c oc_cred.c oc_doxm.c oc_pstat.c \
-		oc_tls.c oc_svr.c oc_store.c oc_pki.c oc_certs.c oc_sp.c oc_keypair.c \
-		oc_csr.c oc_roles.c oc_audit.c oc_ael.c oc_sdi.c)
+	SRC += $(addprefix ../../security/,oc_acl.c oc_cred.c oc_doxm.c oc_pstat.c oc_tls.c oc_svr.c oc_store.c oc_pki.c oc_certs.c oc_sp.c oc_keypair.c oc_csr.c oc_roles.c oc_ael.c oc_audit.c oc_sdi.c)
+
+	ifeq ($(OSCORE),1)
+		SRC += $(addprefix ../../security/,oc_oscore_engine.c oc_oscore_crypto.c oc_oscore_context.c)
+	endif
+
 	SRC_COMMON += $(addprefix $(MBEDTLS_DIR)/library/,${DTLS})
 	MBEDTLS_PATCH_FILE := $(MBEDTLS_DIR)/patched.txt
 ifeq ($(DYNAMIC),1)
@@ -258,6 +260,10 @@ endif
 	VPATH += ../../security/:../../deps/mbedtls/library:
 endif
 
+ifeq ($(OSCORE),1)
+	EXTRA_CFLAGS += -DOC_OSCORE
+endif
+
 ifeq ($(IPV4),1)
 	EXTRA_CFLAGS += -DOC_IPV4
 endif
@@ -266,14 +272,14 @@ ifeq ($(TCP),1)
 	EXTRA_CFLAGS += -DOC_TCP
 endif
 
+ifeq ($(JAVA), 1)
+	SWIG = swig
+endif
+
 CFLAGS += $(EXTRA_CFLAGS)
 
 CONSTRAINED_LIBS = libiotivity-lite-server.a libiotivity-lite-client.a \
 		    libiotivity-lite-client-server.a
-
-ifeq ($(JAVA), 1)
-	SWIG = swig
-endif
 
 all: $(CONSTRAINED_LIBS) $(NATIVE_SAMPLES) $(SWIG)
 

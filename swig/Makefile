@@ -87,6 +87,10 @@ ifneq ($(PKI),0)
 	EXTRA_FLAG += -DOC_PKI
 endif
 
+ifeq ($(OSCORE),1)
+	EXTRA_FLAG += -DOC_OSCORE
+endif
+
 ifeq ($(TCP),1)
 	EXTRA_FLAG += -DOC_TCP
 	SWIG_CFLAG += -DOC_TCP
