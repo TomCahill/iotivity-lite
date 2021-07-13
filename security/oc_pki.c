@@ -243,7 +243,8 @@ pki_add_identity_cert(size_t device, const unsigned char *cert,
   return credid;
 }
 
-int oc_obt_add_identity_cert(size_t device, const unsigned char* cert,
+int
+oc_obt_pki_add_identity_cert(size_t device, const unsigned char* cert,
   size_t cert_size, const unsigned char* key,
   size_t key_size, oc_sec_credusage_t credusage)
 {
