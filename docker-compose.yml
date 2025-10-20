@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  cloud-server-debug-single:
+    build:
+      context: .
+      dockerfile: docker/apps/Dockerfile.cloud-server-debug-single
+    image: cloud-server-debug-single:latest
+    container_name: cloud-server-debug-single
+    command: ["/iotivity-lite/port/linux/service"]
+    restart: unless-stopped
