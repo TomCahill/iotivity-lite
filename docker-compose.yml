@@ -7,5 +7,5 @@ services:
       dockerfile: docker/apps/Dockerfile.cloud-server-debug-single
     image: cloud-server-debug-single:latest
     container_name: cloud-server-debug-single
-    command: ["/iotivity-lite/port/linux/service"]
+    network_mode: host
     restart: unless-stopped
