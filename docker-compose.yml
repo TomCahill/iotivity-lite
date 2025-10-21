@@ -1,11 +1,13 @@
-version: '3'
+version: '3.8'
 
 services:
   cloud-server-debug-single:
     build:
       context: .
       dockerfile: docker/apps/Dockerfile.cloud-server-debug-single
-    image: cloud-server-debug-single:latest
+      platforms:
+        - linux/arm64
+    image: hub.foundries.io/dynamic-devices/cloud-server-debug-single:latest
     container_name: cloud-server-debug-single
-    network_mode: host
     restart: unless-stopped
+    network_mode: host
