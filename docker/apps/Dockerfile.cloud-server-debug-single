@@ -11,5 +11,5 @@ RUN	cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_VERBOSE_MAKEFILE=ON \
 
 FROM alpine:3.22 AS service
 RUN apk add --no-cache bash
-COPY --from=build /iotivity-lite/build/apps/cloud_server /iotivity-lite/port/linux/service
-CMD ["/iotivity-lite/port/linux/service"]
+COPY --from=build /iotivity-lite/build/apps/cloud_server /usr/local/bin/cloud_server
+CMD ["/usr/local/bin/cloud_server"]
