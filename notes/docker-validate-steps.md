@@ -15,7 +15,7 @@ docker build -t cloud-server:latest -f docker/apps/Dockerfile.cloud-server-debug
 Build the onboarding tool for testing
 ```
 mkdir build && cd build/
-cmake -DCMAKE_BUILD_TYPE=Debug -DOC_TCP_ENABLED=1 -DOC_CLOUD_ENABLED=1 -DOC_OSCORE_ENABLED=0 -DOC_SECURITY_ENABLED=1 -DOC_PKI_ENABLED=1 ../
+cmake -DCMAKE_BUILD_TYPE=Debug -DOC_TCP_ENABLED=1 -DOC_IPV4_ENABLED=1 -DOC_CLOUD_ENABLED=1 -DOC_OSCORE_ENABLED=0 -DOC_SECURITY_ENABLED=1 -DOC_PKI_ENABLED=1 ../
 cmake --build . --target onboarding_tool
 ```
 
