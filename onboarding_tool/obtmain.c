@@ -2091,7 +2091,7 @@ factory_presets_cb(size_t device, void *data)
   size_t cert_len = 8192;
 
   cert_len = 8192;
-  if (read_pem("pki_certs/rootca1.pem", cert, &cert_len) < 0) {
+  if (read_pem("/etc/onboarding_tool/pki_certs/rootca1.pem", cert, &cert_len) < 0) {
     OC_PRINTF("ERROR: unable to read certificates\n");
     return;
   }
@@ -2104,7 +2104,7 @@ factory_presets_cb(size_t device, void *data)
   }
 
   cert_len = 8192;
-  if (read_pem("pki_certs/rootca2.pem", cert, &cert_len) < 0) {
+  if (read_pem("/etc/onboarding_tool/pki_certs/rootca2.pem", cert, &cert_len) < 0) {
     OC_PRINTF("ERROR: unable to read certificates\n");
     return;
   }
@@ -2276,7 +2276,7 @@ main(void)
   };
 
 #ifdef OC_STORAGE
-  oc_storage_config("./onboarding_tool_creds");
+  oc_storage_config("/etc/onboarding_tool/onboarding_tool_creds");
 #endif /* OC_STORAGE */
   oc_set_factory_presets_cb(factory_presets_cb, NULL);
   oc_set_con_res_announced(false);

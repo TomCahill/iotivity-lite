@@ -6,10 +6,12 @@ RUN git submodule update --recursive
 RUN mkdir /iotivity-lite/build
 WORKDIR /iotivity-lite/build
 RUN	cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_VERBOSE_MAKEFILE=ON \
-	-DOC_TCP_ENABLED=1 -DOC_IPV4_ENABLED=1 -DOC_CLOUD_ENABLED=1 -DOC_OSCORE_ENABLED=0 -DOC_SECURITY_ENABLED=1 -DOC_PKI_ENABLED=1 .. && \
+	-DOC_DEBUG_ENABLED=1 -DOC_TCP_ENABLED=1 -DOC_IPV4_ENABLED=1 -DOC_CLOUD_ENABLED=1 -DOC_OSCORE_ENABLED=0 -DOC_SECURITY_ENABLED=1 -DOC_PKI_ENABLED=1 .. && \
 	cmake --build . --target onboarding_tool
 
 FROM alpine:3.22 AS service
 RUN apk add --no-cache bash
 COPY --from=build /iotivity-lite/build/onboarding_tool/onboarding_tool /usr/local/bin/onboarding_tool
+COPY --from=build /iotivity-lite/build/onboarding_tool/onboarding_tool_creds /etc/onboarding_tool/onboarding_tool_creds
+COPY --from=build /iotivity-lite/build/onboarding_tool/pki_certs /etc/onboarding_tool/pki_certs
 CMD ["/usr/local/bin/onboarding_tool"]

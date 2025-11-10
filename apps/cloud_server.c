@@ -834,7 +834,7 @@ factory_presets_cb(size_t device, void *data)
 
   unsigned char cloud_ca[4096];
   size_t cert_len = 4096;
-  if (read_pem("pki_certs/cloudca.pem", (char *)cloud_ca, &cert_len) < 0) {
+  if (read_pem("/etc/cloud_server/pki_certs/cloudca.pem", (char *)cloud_ca, &cert_len) < 0) {
     OC_PRINTF("ERROR: unable to read pki_certs/cloudca.pem\n");
     return;
   }
@@ -848,14 +848,14 @@ factory_presets_cb(size_t device, void *data)
 
   unsigned char mfg_crt[4096];
   size_t mfg_crt_len = sizeof(mfg_crt);
-  if (read_pem("pki_certs/mfgcrt.pem", (char *)mfg_crt, &mfg_crt_len) < 0) {
-    OC_PRINTF("ERROR: unable to read pki_certs/mfgcrt.pem\n");
+  if (read_pem("/etc/cloud_server/pki_certs/ee.pem", (char *)mfg_crt, &mfg_crt_len) < 0) {
+    OC_PRINTF("ERROR: unable to read pki_certs/ee.pem\n");
     return;
   }
   unsigned char mfg_key[4096];
   size_t mfg_key_len = sizeof(mfg_key) - 1;
-  if (read_pem("pki_certs/mfgkey.pem", (char *)mfg_key, &mfg_key_len) < 0) {
-    OC_PRINTF("ERROR: unable to read pki_certs/mfgkey.pem\n");
+  if (read_pem("/etc/cloud_server/pki_certs/key.pem", (char *)mfg_key, &mfg_key_len) < 0) {
+    OC_PRINTF("ERROR: unable to read pki_certs/key.pem\n");
     return;
   }
   if (simulate_tpm) {
@@ -1684,7 +1684,7 @@ main(int argc, char *argv[])
   oc_log_set_function(cloud_server_log);
   oc_set_send_response_callback(cloud_server_send_response_cb);
 #ifdef OC_STORAGE
-  oc_storage_config("./cloud_server_creds/");
+  oc_storage_config("/etc/cloud_server/cloud_server_creds/");
 #endif /* OC_STORAGE */
   oc_set_factory_presets_cb(factory_presets_cb, NULL);
 
