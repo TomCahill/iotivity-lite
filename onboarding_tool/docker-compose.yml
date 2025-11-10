@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  ocf-onboarding-tool:
+    build:
+      context: ../
+      dockerfile: docker/apps/Dockerfile.onboarding-tool
+      platforms:
+        - linux/arm64
+    image: hub.foundries.io/dynamic-devices/ocf-onboarding-tool:latest
+    container_name: ocf-onboarding-tool
+    restart: unless-stopped
+    network_mode: host
+    stdin_open: true
+    tty: true
