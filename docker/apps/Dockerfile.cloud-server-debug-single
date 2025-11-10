@@ -12,7 +12,7 @@ RUN	cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_VERBOSE_MAKEFILE=ON \
 FROM alpine:3.22 AS service
 RUN apk add --no-cache bash
 COPY --from=build /iotivity-lite/build/apps/cloud_server /usr/local/bin/cloud_server
-COPY --from=build /iotivity-lite/build/apps/cloud_server_creds /etc/cloud_server/cloud_server_creds
-COPY --from=build /iotivity-lite/build/apps/pki_certs /etc/cloud_server/pki_certs
-WORKDIR /etc/cloud_server
+COPY --from=build /iotivity-lite/build/apps/cloud_server_creds /opt/cloud_server/cloud_server_creds
+COPY --from=build /iotivity-lite/build/apps/pki_certs /opt/cloud_server/pki_certs
+WORKDIR /opt/cloud_server
 CMD ["/usr/local/bin/cloud_server"]

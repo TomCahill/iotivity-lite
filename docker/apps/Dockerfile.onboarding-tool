@@ -12,6 +12,7 @@ RUN	cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_VERBOSE_MAKEFILE=ON \
 FROM alpine:3.22 AS service
 RUN apk add --no-cache bash
 COPY --from=build /iotivity-lite/build/onboarding_tool/onboarding_tool /usr/local/bin/onboarding_tool
-COPY --from=build /iotivity-lite/build/onboarding_tool/onboarding_tool_creds /etc/onboarding_tool/onboarding_tool_creds
-COPY --from=build /iotivity-lite/build/onboarding_tool/pki_certs /etc/onboarding_tool/pki_certs
+COPY --from=build /iotivity-lite/build/onboarding_tool/onboarding_tool_creds /opt/onboarding_tool/onboarding_tool_creds
+COPY --from=build /iotivity-lite/build/onboarding_tool/pki_certs /opt/onboarding_tool/pki_certs
+WORKDIR /opt/onboarding_tool
 CMD ["/usr/local/bin/onboarding_tool"]
