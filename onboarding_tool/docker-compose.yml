@@ -10,6 +10,11 @@ services:
     image: hub.foundries.io/dynamic-devices/ocf-onboarding-tool:latest
     container_name: ocf-onboarding-tool
     restart: unless-stopped
-    network_mode: host
     stdin_open: true
     tty: true
+    networks:
+      - iotivity-net
+
+networks:
+  iotivity-net:
+    external: true

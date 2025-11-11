@@ -10,4 +10,14 @@ services:
     image: hub.foundries.io/dynamic-devices/cloud-server-debug-single:latest
     container_name: cloud-server-debug-single
     restart: unless-stopped
-    network_mode: host
+    ports:
+      - "5683:5683/udp"
+      - "5684:5684/udp"
+      - "5683:5683/tcp"
+      - "5684:5684/tcp"
+    networks:
+      - iotivity-net
+
+networks:
+  iotivity-net:
+    external: true
